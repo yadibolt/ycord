@@ -73,10 +73,9 @@ module.exports = { registerCommand, registerEvent };`;
 }
 
 function getMessageEventDiscordJS() {
-    return `/* Props */
-const PropEvent = require('../../structure/PropEvent.js');
-/* https://discord.js.org/#/docs/main/stable/class/Message */
-module.exports = class MessageEvent extends PropEvent {
+    return `const PropEvent = require('../../structure/PropEvent');
+/* https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-message */
+module.exports = class messageEvent extends PropEvent {
     constructor() {
         super('message');
     }
@@ -86,7 +85,6 @@ module.exports = class MessageEvent extends PropEvent {
         if (!msg.content.startsWith(process.env.ClientPrefix)) return;
         let command_ = msg.content.substring(process.env.ClientPrefix.length).split(new RegExp(/\\s+/));
         let command_name = command_.shift().toLowerCase();
-        console.log(command_name);
         let args = command_;
         if (client.commands.get(command_name)) {
             client.commands.get(command_name).run(client, msg, args);
@@ -118,7 +116,7 @@ function getPingCommand() {
     
 module.exports = class PingCommand extends PropCommand {
     constructor() {
-        super('ping', 'normal', []);
+        super('ping', 'test', []);
     }
     async run(client, msg, args) {
         msg.channel.send("Pong!");

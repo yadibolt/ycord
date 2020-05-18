@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 const { getClientJS, getRegisterJS, getDotEnv, getMessageEventDiscordJS, getPropEvent, getPropCommand, getPingCommand, getycord } = require('./templates/templates');
+const { getNewCommand } = require('./templates/command');
+const { eventTemplateCall } = require('./templates/event');
 
 async function createDir(fpath, dirname) {
     if (!fs.existsSync(`${fpath}${dirname}`)) {
@@ -45,4 +47,26 @@ async function createycordFile(fpath) {
     await fs.writeFileSync(path.join(`${fpath}/`, 'ycord.json'), getycord());
 }
 
-module.exports = { createDir, generateProject, editPackageJSON, createycordFile };
+async function checkycordFile(fpath) {
+    const ext = await fs.existsSync(path.join(fpath, 'ycord.json'));
+    if (ext) return true;
+    else return false;
+}
+async function checkFolder(fpath, end) {
+    const ext = await fs.existsSync(path.join(fpath, end));
+    if (ext) return true;
+    else return false;
+}
+
+async function createEventFinal(eventName, fpath) {
+    eventTemplateCall(eventName).then(async(obj) => {
+        await fs.writeFileSync(fpath, obj);
+    })
+}
+
+async function createCommandFinal(n, c, fpath) {
+    let commandtemplate = getNewCommand(n, c);
+    await fs.writeFileSync(fpath, commandtemplate);
+}
+
+module.exports = { createDir, generateProject, editPackageJSON, createycordFile, checkycordFile, checkFolder, createEventFinal, createCommandFinal };

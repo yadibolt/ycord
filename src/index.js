@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
 /* depencencies */
-const fs = require('fs');
 const { question } = require('./questions');
-const { createNewProject } = require('./commerce');
+const { createNewProject, createNewEvent, createNewCommand } = require('./commerce');
 
 (async() => {
     /* arguments from cli */
@@ -14,15 +13,15 @@ const { createNewProject } = require('./commerce');
         question().then(r => {
             createNewProject(r.name, r.version, r.prefix, r.token);
         });
+        return;
     }
-    /* ycord ccmd */
-    if (argument[0]) {
-        if (argument[0].toLowerCase() === "ccmd") {
-            /* not yet done */
-        }
-        /* ycord cev */
-        if (argument[0].toLowerCase() === "cev") {
-            /* not yet done */
-        }
+    if (argument[0].toLowerCase() === "ge" && argument[1]) {
+        createNewEvent(argument);
+        return;
     }
+    if (argument[0].toLowerCase() === "gc" && argument[1] && argument[2]) {
+        createNewCommand(argument);
+        return;
+    }
+    return console.error('rip');
 })()
