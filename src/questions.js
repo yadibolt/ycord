@@ -2,6 +2,8 @@
 const inquirer = require('inquirer');
 const path = require('path');
 const fs = require('fs');
+const chalk = require('chalk');
+const { logThis } = require('./filesystem');
 
 async function question() {
     let project = inquirer
@@ -11,10 +13,18 @@ async function question() {
             message: "What is the name of your project?",
             default: path.basename(process.cwd()),
             validate: async function(value) {
-                if (fs.existsSync(`${process.cwd()}/${value}`)) {
-                    console.log(`\n[ycord] Unexpected error while trying to create '${value}' directory.\n[ycord] DIRECTORY ALREADY EXISTS.\n[ycord] Please provide new one`);
+                let letters = /^[A-Za-z]+$/;
+                if (!(value.match(letters))) {
+                    logThis(chalk.bold.red(`Unexpected error while trying to create '${value}' directory.`), true);
+                    logThis(chalk.bold.red(`DIRECTORY NAME CAN CONTAIN ONLY LETTERS.`));
                     return false;
-                } else return true;
+                } else {
+                    if (fs.existsSync(`${process.cwd()}/${value}`)) {
+                        logThis(chalk.bold.red(`Unexpected error while trying to create '${value}' directory.`), true);
+                        logThis(chalk.bold.red(`DIRECTORY ALREADY EXISTS.`));
+                        return false;
+                    } else return true;
+                }
             }
         }, {
             type: 'list',
@@ -35,7 +45,11 @@ async function question() {
             message: "Please, provide your bot's token",
             validate: function(value) {
                 if (value.length === 59) return true;
-                else { console.log('\nerr: 59chars'); return false; }
+                else {
+                    logThis(chalk.bold.red(`Unexpected error while trying to save token data.`), true);
+                    logThis(chalk.bold.red(`TOKEN HAS TO BE 59 CHARACTERS LONG`));
+                    return false;
+                }
             }
         }]).then(answers => {
             return {

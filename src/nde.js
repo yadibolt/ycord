@@ -1,7 +1,6 @@
 const { execSync } = require('child_process');
 
 async function npmInit(path) {
-    console.log(`[ycord] Initializing directory...`);
     return execSync('npm init -y', {
         cwd: path,
     });

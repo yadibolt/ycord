@@ -1,6 +1,7 @@
 /* depencencies */
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
 
 const { getClientJS, getRegisterJS, getDotEnv, getMessageEventDiscordJS, getPropEvent, getPropCommand, getPingCommand, getycord } = require('./templates/templates');
 const { getNewCommand } = require('./templates/command');
@@ -9,7 +10,7 @@ const { eventTemplateCall } = require('./templates/event');
 async function createDir(fpath, dirname) {
     if (!fs.existsSync(`${fpath}${dirname}`)) {
         fs.mkdirSync(`${fpath}${dirname}`);
-        return console.log(`[ycord] Created '${dirname}' directory.`);
+        return;
     }
 }
 
@@ -69,4 +70,11 @@ async function createCommandFinal(n, c, fpath) {
     await fs.writeFileSync(fpath, commandtemplate);
 }
 
-module.exports = { createDir, generateProject, editPackageJSON, createycordFile, checkycordFile, checkFolder, createEventFinal, createCommandFinal };
+async function logThis(args, newline = false) {
+    if (newline) {
+        return (console.log("\n" + chalk.bgHex("#fcf27f").bold.black(`[ Ycord ]`) + chalk.hex("#fcf27f")(' ~ ') + args));
+    } else
+        return (console.log(chalk.bgHex("#fcf27f").bold.black(`[ Ycord ]`) + chalk.hex("#fcf27f")(' ~ ') + args));
+}
+
+module.exports = { createDir, generateProject, editPackageJSON, createycordFile, checkycordFile, checkFolder, createEventFinal, createCommandFinal, logThis };

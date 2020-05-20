@@ -1,22 +1,36 @@
-const { createDir, generateProject, editPackageJSON, createycordFile, checkycordFile, checkFolder, createEventFinal, createCommandFinal } = require('./filesystem');
+const chalk = require('chalk');
+const { createDir, generateProject, editPackageJSON, createycordFile, checkycordFile, checkFolder, createEventFinal, createCommandFinal, logThis } = require('./filesystem');
 const { npmInit, installDiscordjs, installDotEnv } = require('./nde');
 const { eventEmitters } = require('./constants');
 
-async function createNewProject(name, version, prefix, token, path) {
+async function createNewProject(name, version, prefix, token) {
     /* create main directory */
+    logThis(chalk.bold.gray(`Creating main project directory ...`));
     await createDir(`./`, `${name}`);
+    logThis(chalk.bold.gray(`${name} - main directory created.`));
     /* npm init the dir */
+    logThis(chalk.bold.gray(`Initializing ${name} project directory ...`));
     await npmInit(`./${name}`);
+    logThis(chalk.bold.hex("90ee90")(`Successfully initialized ${name} project directory.`));
     /* install dependencies - discord.js */
+    logThis(chalk.bold.gray(`Installing dependencies:`));
+    logThis(chalk.bold.gray(`discord.js v@${version} ...`));
     await installDiscordjs(`./${name}`, version);
+    logThis(chalk.bold.hex("90ee90")(`Done.`));
     /* install dependencies - dotenv */
+    logThis(chalk.bold.gray(`dotenv ...`));
     await installDotEnv(`./${name}`);
+    logThis(chalk.bold.hex("90ee90")(`Done. All dependencies installed.`));
     /* generateProject */
+    logThis(chalk.bold.gray(`Generating missing folders and files ...`));
     await generateProject(`./${name}`, name, prefix, token);
+    logThis(chalk.bold.hex("90ee90")(`Done.`));
     /* editPackageJSON */
+    logThis(chalk.bold.gray(`Finishing ...`));
     await editPackageJSON(`./${name}`);
     /* createycordFile */
     await createycordFile(`./${name}`);
+    logThis(chalk.bold.hex("90ee90")(`Project successfully generated!`));
     return;
 }
 
