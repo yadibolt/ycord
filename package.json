@@ -1,6 +1,6 @@
 {
     "name": "ycord",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "main": "src/index.js",
     "bin": {
         "ycord": "./src/index.js"
@@ -10,10 +10,15 @@
     },
     "author": "yadibolt",
     "license": "ISC",
-    "directories": {
-        "test": "test"
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yadibolt/ycord.git"
     },
-    "description": "",
+    "bugs": {
+        "url": "https://github.com/yadibolt/ycord/issues"
+    },
+    "homepage": "https://github.com/yadibolt/ycord#readme",
+    "description": "Create a new project in couple of seconds.",
     "dependencies": {
         "chalk": "^4.0.0",
         "child_process": "^1.0.2",
