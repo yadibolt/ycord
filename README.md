@@ -14,16 +14,18 @@ YCORD is currently supporting only JavaScript projects. TypeScript? Maybe in the
 
 Get your own YCORD simply by running `npm install -g ycord` on your terminal.  (Global installation)
 
+## Safety
+
+YCORD is not gathering any type of information or data that you provide.
+
 ## Functionality
 
 > Start by generating a new project. Type `ycord` on your terminal and follow the steps.
 
 > Please note that YCORD creates project in directory where you run the command.
-  for example: `C:\<Users>\<User>\Desktop>ycord` creates a project with name you've specified on your desktop.
+  for example: `C:\Users\<User>\Desktop>ycord` creates a project with name you've specified on your desktop.
 
 > Once's everything done, you can go in to your project and type `node .` or `node \src\client.js` to start your bot.
-
-> YCORD is not gathering any type of information or data that you provide.
 
 ## Command generating
 

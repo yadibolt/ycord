@@ -2,7 +2,7 @@
 
 /* depencencies */
 const { question } = require('./questions');
-const { createNewProject, createNewEvent, createNewCommand } = require('./commerce');
+const { createNewProject, createNewEvent, createNewCommand, runLSE, logErr } = require('./commerce');
 
 (async() => {
     /* arguments from cli */
@@ -15,6 +15,10 @@ const { createNewProject, createNewEvent, createNewCommand } = require('./commer
         });
         return;
     }
+    if (argument[0].toLowerCase() === "lse") {
+        runLSE();
+        return;
+    }
     if (argument[0].toLowerCase() === "ge" && argument[1]) {
         createNewEvent(argument);
         return;
@@ -23,5 +27,5 @@ const { createNewProject, createNewEvent, createNewCommand } = require('./commer
         createNewCommand(argument);
         return;
     }
-    return console.error('rip');
+    return await logErr(argument);
 })()

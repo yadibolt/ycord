@@ -36,41 +36,104 @@ async function createNewProject(name, version, prefix, token) {
 
 async function createNewEvent(args) {
     const check = await checkycordFile(process.cwd());
-    if (!check) return console.log('does not exist');
+    if (!check) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]}`));
+        logThis(chalk.bold.red(`ycord.json DOES NOT EXISTS`));
+        return;
+    }
     let findEvent = await eventEmitters.find(ev => ev === args[1]);
-    if (findEvent === undefined) return console.log('No event found');
+    if (findEvent === undefined) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]}`));
+        logThis(chalk.bold.red(`COULD NOT FIND EVENT`));
+        return;
+    }
     let sourceFolder = await checkFolder(process.cwd(), 'src');
-    if (!sourceFolder) return console.log('no srcfol');
+    if (!sourceFolder) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]}`));
+        logThis(chalk.bold.red(`COULD NOT FIND src DIRECTORY`));
+        return;
+    }
     let utilFolder = await checkFolder(process.cwd(), 'src/util');
-    if (!utilFolder) return console.log('no utilfol');
+    if (!utilFolder) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]}`));
+        logThis(chalk.bold.red(`COULD NOT FIND src/util DIRECTORY`));
+        return;
+    }
     let eventFolder = await checkFolder(process.cwd(), 'src/util/event');
-    if (!eventFolder) return console.log('no eventfol');
+    if (!eventFolder) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]}`));
+        logThis(chalk.bold.red(`COULD NOT FIND src/util/event DIRECTORY`));
+        return;
+    }
     let discordFolder = await checkFolder(process.cwd(), 'src/util/event/discord');
-    if (!discordFolder) return console.log('no discordfol');
+    if (!discordFolder) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]}`));
+        logThis(chalk.bold.red(`COULD NOT FIND src/util/event/discord DIRECTORY`));
+        return;
+    }
     let endpointFile = await checkFolder(process.cwd(), `src/util/event/discord/${args[1]}.js`);
-    if (endpointFile) return console.log(`exts ${args[1]} event`);
-    createEventFinal(args[1], `${process.cwd()}/src/util/event/discord/${args[1]}.js`);
+    if (endpointFile) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]}`));
+        logThis(chalk.bold.red(`${args[1]}.js EVENT ALREADY EXISTS`));
+        return;
+    }
+    logThis(chalk.bold.gray(`Directories found. Creating event ...`));
+    await createEventFinal(args[1], `${process.cwd()}/src/util/event/discord/${args[1]}.js`);
+    logThis(chalk.bold.hex("90ee90")(`Successfully created ${args[1]} event.`));
     return;
 }
 
 async function createNewCommand(args) {
     const check = await checkycordFile(process.cwd());
-    if (!check) return console.log('does not exist');
+    if (!check) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]} ${args[2]}`));
+        logThis(chalk.bold.red(`ycord.json DOES NOT EXISTS`));
+        return;
+    }
     let sourceFolder = await checkFolder(process.cwd(), 'src');
-    if (!sourceFolder) return console.log('no srcfol');
+    if (!sourceFolder) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]} ${args[2]}`));
+        logThis(chalk.bold.red(`COULD NOT FIND src DIRECTORY`));
+        return;
+    }
     let commandFolder = await checkFolder(process.cwd(), 'src/command');
-    if (!commandFolder) return console.log('no commandfol');
+    if (!commandFolder) {
+        logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]} ${args[2]}`));
+        logThis(chalk.bold.red(`COULD NOT FIND src/command DIRECTORY`));
+        return;
+    }
     let inputFolder = await checkFolder(process.cwd(), `src/command/${args[2]}`);
     if (!inputFolder) {
-        console.log(`no ${args[2]}fol\nCreating one...`);
+        logThis(chalk.bold.gray(`No ${args[2]} directory found. Creating one ...`));
         await createDir(`${process.cwd()}/src/command/`, `${args[2]}`);
-        createCommandFinal(args[1], args[2], `${process.cwd()}/src/command/${args[2]}/${args[1]}.js`);
+        logThis(chalk.bold.hex("90ee90")(`Successfully created ${args[2]} command directory.`));
+        logThis(chalk.bold.gray(`Creating command ...`));
+        await createCommandFinal(args[1], args[2], `${process.cwd()}/src/command/${args[2]}/${args[1]}.js`);
+        logThis(chalk.bold.hex("90ee90")(`Successfully created ${args[2]} command.`));
     } else {
         let fileCheck = await checkFolder(process.cwd(), `src/command/${args[2]}/${args[1]}.js`);
-        if (fileCheck) return console.log('command exists');
-        createCommandFinal(args[1], args[2], `${process.cwd()}/src/command/${args[2]}/${args[1]}.js`);
+        if (fileCheck) {
+            logThis(chalk.bold.red(`Unexpected error while trying to run ycord ${args[0]} ${args[1]} ${args[2]}`));
+            logThis(chalk.bold.red(`COMMAND ALREADY EXISTS`));
+            return;
+        }
+        logThis(chalk.bold.gray(`Directories found. Creating command ...`));
+        await createCommandFinal(args[1], args[2], `${process.cwd()}/src/command/${args[2]}/${args[1]}.js`);
+        logThis(chalk.bold.hex("90ee90")(`Successfully created ${args[2]} command.`));
     }
     return;
 }
 
-module.exports = { createNewProject, createNewEvent, createNewCommand };
+async function runLSE() {
+    let events = eventEmitters;
+    for (let x = 0; x < events.length; x++) {
+        logThis(chalk.bold.gray(`${events[x]}`));
+    }
+}
+
+async function logErr(args) {
+    logThis(chalk.bold.red(`Unexpected error while trying to run ${args[0]}`));
+    logThis(chalk.bold.red(`>> ycord ${args[0]} << IS NOT A PART OF YCORD`));
+}
+
+module.exports = { createNewProject, createNewEvent, createNewCommand, runLSE, logErr };
